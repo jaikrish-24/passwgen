@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password Generator</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">Password Generator</h1>
+
+                <form method="post">
+                    <div class="form-group">
+                        <label for="password-length">Password Length: <span id="password-length-value">12</span></label>
+                        <input type="range" class="form-control-range custom-range" id="password-length" name="password_length" min="8" max="16" value="12" onchange="updatePasswordLength(this.value)">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="preferences" value="1" id="alpha-upper" />
+                        <label class="form-check-label" for="alpha-upper">Include Alpha Upper (A-Z)</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="preferences" value="2" id="alpha-lower" />
+                        <label class="form-check-label" for="alpha-lower">Include Alpha Lower (a-z)</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="preferences" value="3" id="numbers" />
+                        <label class="form-check-label" for="numbers">Include Numbers (0-9)</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="preferences" value="4" id="symbols" />
+                        <label class="form-check-label" for="symbols">Include Symbols</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="preferences" value="5" id="spaces" />
+                        <label class="form-check-label" for="spaces">Include Spaces</label>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3" onclick="generatePassword()">Generate Password</button>
+                </form>
+                <div id="password-result" class="alert alert-success mt-3 d-flex align-items-center" style="display: none;">
+                    <input type="text" class="form-control" id="generated-password" readonly />
+                    <button class="btn btn-outline-secondary ml-2" onclick="copyPassword()"><i class="fas fa-copy"></i></button>
+                </div>
+                <div id="strength-bar-container" class="mt-3" style="display: none;">
+                    <div id="strength-bar" class="progress-bar" role="progressbar" style="width: 0;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function copyPassword() {
+            var passwordField = document.getElementById('generated-password');
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            alert('Password copied to clipboard');
+        }
+
+        function updatePasswordLength(value) {
+            document.getElementById("password-length-value").textContent = value;
+        }
+
+        function generatePassword() {
+            var passwordLength = parseInt(document.getElementById("password-length").value);
+            var preferences = [];
+            var checkboxes = document.querySelectorAll('input[name="preferences"]:checked');
+            checkboxes.forEach(function(checkbox) {
+                preferences.push(parseInt(checkbox.value));
+            });
+
+            fetch('/generate_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    password_length: passwordLength,
+                    preferences: preferences
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('generated-password').value = data;
+                document.getElementById('password-result').style.display = 'flex';
+                updateStrengthBar(passwordLength);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        function updateStrengthBar(length) {
+            var strengthBar = document.getElementById('strength-bar');
+            var strengthBarContainer = document.getElementById('strength-bar-container');
+            strengthBarContainer.style.display = 'block';
+
+            if (length <= 8) {
+                strengthBar.style.width = '33%';
+                strengthBar.style.backgroundColor = 'red';
+                strengthBar.textContent = 'Weak';
+            } else if (length > 8 && length <= 12) {
+                strengthBar.style.width = '66%';
+                strengthBar.style.backgroundColor = 'orange';
+                strengthBar.textContent = 'Moderate';
+            } else if (length > 12) {
+                strengthBar.style.width = '100%';
+                strengthBar.style.backgroundColor = 'green';
+                strengthBar.textContent = 'Strong';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+    background-color: #f8f9fa;
+}
+
+.card {
+    max-width: 600px;
+    margin: auto;
+}
+
+.card-title {
+    text-align: center;
+}
+
+.alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.alert .form-control {
+    flex: 1;
+}
+
+.alert .btn {
+    margin-left: 10px;
+}
+
+/* Add this CSS to your existing styles.css file */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+}
+
+/* Custom styling for range input */
+.custom-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: pointer;
+}
+
+.custom-range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: pointer;
+}
+
+.custom-range::-ms-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: pointer;
+}
+
+/* Password length value */
+#password-length-value {
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 5px;
+    color: #007bff; /* Blue color */
+}
+
+/* Strength bar container */
+#strength-bar-container {
+    width: 100%;
+    height: 25px;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+#strength-bar {
+    height: 100%;
+    border-radius: 0.25rem;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    line-height: 25px;
+}
