@@ -19,7 +19,7 @@
 ## Setup and Installation
 1. Clone the repository to your local machine.
 ```bash
-git clone https://github.com/jaikrix/passwd-gen-.git
+git clone https://github.com/jaikrish-24/passwgen.git
 ```
 
 2. Install packages required for the tool.
